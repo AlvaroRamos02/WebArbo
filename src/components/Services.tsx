@@ -1,55 +1,82 @@
-import { Code, ShoppingCart, Wrench, BarChart } from "lucide-react";
+import { Globe, Workflow, Database, Cpu, Lock, Terminal } from "lucide-react";
 
 const services = [
     {
-        title: "Desarrollo Web",
-        description: "Sitios web profesionales que cargan rápido y se ven increíbles en cualquier dispositivo. Diseñados para convertir.",
-        icon: Code,
+        title: "Desarrollo Web & Apps",
+        description: "Aplicaciones robustas y escalables con tecnologías modernas (React, Vue, Node.js). Arquitectura limpia desde el día uno.",
+        icon: Globe,
+        tech: ["React / Vue", "Node.js", "Modern Stack"]
     },
     {
-        title: "Tiendas Online",
-        description: "E-commerce completo y listo para vender. Gestión fácil, pagos seguros y diseño que invita a comprar.",
-        icon: ShoppingCart,
+        title: "Automatización de Procesos",
+        description: "Elimina la carga operativa manual. Creamos flujos de trabajo a medida que integran todo tu software.",
+        icon: Workflow,
+        tech: ["n8n", "Python", "Integraciones API"]
     },
     {
-        title: "Mantenimiento Web",
-        description: "Tu web siempre actualizada, segura y funcionando. Me encargo de todo para que tú te centres en tu negocio.",
-        icon: Wrench,
+        title: "SEO & Posicionamiento",
+        description: "Estrategia técnica y de contenidos para que tu negocio sea visible. Optimización de velocidad y estructura.",
+        icon: Database,
+        tech: ["SEO Técnico", "Auditoría", "Analytics"]
     },
     {
-        title: "Optimización SEO",
-        description: "Hago que tu web aparezca en Google cuando tus clientes buscan lo que ofreces. Más visibilidad, más ventas.",
-        icon: BarChart,
+        title: "Ingeniería de Rendimiento",
+        description: "Optimización de Core Web Vitals, tiempos de carga y renderizado. Hacemos que tu presencia digital vuele.",
+        icon: Cpu,
+        tech: ["Web Vitals", "CDN", "Caché"]
+    },
+    {
+        title: "Seguridad Digital",
+        description: "Implementación de mejores prácticas para proteger tus datos y usuarios. HTTPS, Autenticación y auditoría.",
+        icon: Lock,
+        tech: ["Auth", "Encriptación", "Seguridad"]
+    },
+    {
+        title: "Consultoría Tecnológica",
+        description: "Actuamos como tu CTO externo. Decisiones estratégicas respaldadas por experiencia en ingeniería.",
+        icon: Terminal,
+        tech: ["Estrategia", "Code Review", "Mentoring"]
     },
 ];
 
 export function Services() {
     return (
-        <section id="servicios" className="py-16 md:py-24 bg-gray-50">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Servicios que impulsan tu negocio
+        <section id="servicios" className="relative py-24 bg-background border-t border-white/5">
+            <div className="container mx-auto px-4 md:px-6 relative">
+                <div className="mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-xs font-mono text-primary mb-6">
+                        <span className="text-primary">01.</span> Capacidades
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground max-w-2xl">
+                        Ingeniería y soluciones para <span className="text-primary">problemas complejos.</span>
                     </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Soluciones web profesionales diseñadas para empresas que quieren crecer.
-                    </p>
                 </div>
-                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                    {services.map((service) => (
+
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {services.map((service, index) => (
                         <div
                             key={service.title}
-                            className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all duration-300 hover:-translate-y-1"
+                            className="group relative p-6 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
                         >
-                            <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors duration-300">
-                                <service.icon className="text-primary group-hover:scale-110 transition-transform duration-300" size={24} />
+                            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+                                <service.icon size={24} />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+
+                            <h3 className="text-xl font-bold text-foreground mb-3 font-display">
                                 {service.title}
                             </h3>
-                            <p className="text-gray-600 leading-relaxed">
+
+                            <p className="text-muted-foreground leading-relaxed mb-6 h-20">
                                 {service.description}
                             </p>
+
+                            <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                                {service.tech.map((t) => (
+                                    <span key={t} className="text-xs font-mono text-primary/80 bg-primary/5 px-2 py-1 rounded">
+                                        {t}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     ))}
                 </div>

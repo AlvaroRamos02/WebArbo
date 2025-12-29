@@ -108,3 +108,4 @@ Si en el futuro quieres enviar a cualquier email (no solo el tuyo), tienes 2 opc
 
 **¡Eso es todo! No necesitas nada más.**
 
+

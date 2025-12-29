@@ -183,3 +183,4 @@ RESEND_FROM_EMAIL=noreply@tudominio.com
 
 Una vez configuradas las variables, tu formulario funcionará exactamente igual que en local, pero en producción. No necesitas cambiar nada más en el código.
 
+

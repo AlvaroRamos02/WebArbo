@@ -34,16 +34,16 @@ function escapeHtml(text: string): string {
 function validateEmail(email: string): string | null {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const sanitized = email.trim().toLowerCase();
-    
+
     if (!emailRegex.test(sanitized)) {
         return null;
     }
-    
+
     // Prevenir emails demasiado largos
     if (sanitized.length > 254) {
         return null;
     }
-    
+
     return sanitized;
 }
 
@@ -78,9 +78,9 @@ setInterval(() => {
 export async function POST(request: NextRequest) {
     try {
         // Obtener IP del cliente para rate limiting
-        const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || 
-                   request.headers.get("x-real-ip") || 
-                   "unknown";
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ||
+            request.headers.get("x-real-ip") ||
+            "unknown";
 
         // Verificar rate limiting
         if (!checkRateLimit(ip)) {
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        let { name, email, type, budget, message } = body;
+        let { name, email, type, message } = body;
 
         // Validación de campos requeridos
         if (!name || !email || !message) {
@@ -139,15 +139,9 @@ export async function POST(request: NextRequest) {
         }
 
         // Validar tipo de proyecto
-        const validTypes = ["landing", "web-corporativa", "tienda", "otro"];
+        const validTypes = ["procesos", "automatizacion", "web-corporativa", "landing", "otro"];
         if (type && !validTypes.includes(type)) {
             type = "otro";
-        }
-
-        // Validar presupuesto
-        const validBudgets = ["menos-500", "500-1000", "1000-2000", "mas-2000"];
-        if (budget && !validBudgets.includes(budget)) {
-            budget = "menos-500";
         }
 
         // Verificar que Resend esté configurado
@@ -171,17 +165,11 @@ export async function POST(request: NextRequest) {
 
         // Mapear valores legibles
         const typeLabels: Record<string, string> = {
+            "procesos": "Optimización de procesos",
+            "automatizacion": "Automatización",
             "landing": "Landing Page",
             "web-corporativa": "Web Corporativa",
-            "tienda": "Tienda Online",
             "otro": "Otro"
-        };
-
-        const budgetLabels: Record<string, string> = {
-            "menos-500": "Menos de 500€",
-            "500-1000": "500€ - 1000€",
-            "1000-2000": "1000€ - 2000€",
-            "mas-2000": "Más de 2000€"
         };
 
         // Escapar todos los valores para prevenir XSS
@@ -189,7 +177,6 @@ export async function POST(request: NextRequest) {
         const safeEmail = escapeHtml(email);
         const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
         const safeType = escapeHtml(typeLabels[type] || type);
-        const safeBudget = escapeHtml(budgetLabels[budget] || budget);
 
         // Enviar email con Resend
         const emailResult = await resend.emails.send({
@@ -206,29 +193,29 @@ export async function POST(request: NextRequest) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6; line-height: 1.6;">
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f3f4f6;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f1ec;">
         <tr>
             <td align="center" style="padding: 40px 20px;">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #1D4ED8 0%, #8b5cf6 100%); padding: 40px 30px; text-align: center;">
+                        <td style="background: linear-gradient(135deg, #1F4D3A 0%, #D8A866 100%); padding: 40px 30px; text-align: center;">
                             <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">
-                                🌳 Nuevo Contacto desde Arbor
+                                🌳 Nuevo Contacto desde Arbor Group
                             </h1>
                         </td>
                     </tr>
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px 30px; background-color: #f9fafb;">
+                        <td style="padding: 40px 30px; background-color: #faf8f5;">
                             <!-- Nombre -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1F4D3A; text-transform: uppercase; letter-spacing: 0.5px;">
                                             Nombre
                                         </p>
-                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1D4ED8; margin-top: 8px;">
+                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1F4D3A; margin-top: 8px;">
                                             <p style="margin: 0; font-size: 16px; color: #111827; font-weight: 500;">
                                                 ${safeName}
                                             </p>
@@ -241,11 +228,11 @@ export async function POST(request: NextRequest) {
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1F4D3A; text-transform: uppercase; letter-spacing: 0.5px;">
                                             Email
                                         </p>
-                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1D4ED8; margin-top: 8px;">
-                                            <a href="mailto:${safeEmail}" style="color: #1D4ED8; text-decoration: none; font-size: 16px; font-weight: 500;">
+                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1F4D3A; margin-top: 8px;">
+                                            <a href="mailto:${safeEmail}" style="color: #1F4D3A; text-decoration: none; font-size: 16px; font-weight: 500;">
                                                 ${safeEmail}
                                             </a>
                                         </div>
@@ -257,28 +244,12 @@ export async function POST(request: NextRequest) {
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1F4D3A; text-transform: uppercase; letter-spacing: 0.5px;">
                                             Tipo de Proyecto
                                         </p>
-                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1D4ED8; margin-top: 8px;">
+                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1F4D3A; margin-top: 8px;">
                                             <p style="margin: 0; font-size: 16px; color: #111827; font-weight: 500;">
                                                 ${safeType}
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            
-                            <!-- Presupuesto -->
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
-                                <tr>
-                                    <td>
-                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.5px;">
-                                            Presupuesto Aproximado
-                                        </p>
-                                        <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border-left: 4px solid #1D4ED8; margin-top: 8px;">
-                                            <p style="margin: 0; font-size: 16px; color: #111827; font-weight: 500;">
-                                                ${safeBudget}
                                             </p>
                                         </div>
                                     </td>
@@ -289,10 +260,10 @@ export async function POST(request: NextRequest) {
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #8b5cf6; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #D8A866; text-transform: uppercase; letter-spacing: 0.5px;">
                                             Mensaje
                                         </p>
-                                        <div style="background-color: #ffffff; padding: 20px; border-radius: 6px; border-left: 4px solid #8b5cf6; margin-top: 8px;">
+                                        <div style="background-color: #ffffff; padding: 20px; border-radius: 6px; border-left: 4px solid #D8A866; margin-top: 8px;">
                                             <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.7; white-space: pre-wrap;">
                                                 ${safeMessage}
                                             </p>
@@ -306,7 +277,7 @@ export async function POST(request: NextRequest) {
                                 <tr>
                                     <td style="padding-top: 30px; border-top: 2px solid #e5e7eb;">
                                         <p style="margin: 0 0 8px 0; font-size: 12px; color: #6b7280; text-align: center; line-height: 1.6;">
-                                            Este email fue enviado desde el formulario de contacto de <strong style="color: #1D4ED8;">Arbor</strong>.
+                                            Este email fue enviado desde el formulario de contacto de <strong style="color: #1F4D3A;">Arbor Group</strong>.
                                         </p>
                                         <p style="margin: 0; font-size: 12px; color: #6b7280; text-align: center; line-height: 1.6;">
                                             Puedes responder directamente a este email para contactar con <strong>${safeName}</strong>.
@@ -324,18 +295,17 @@ export async function POST(request: NextRequest) {
 </html>
             `.trim(),
             text: `
-Nuevo Contacto desde Arbor
+Nuevo Contacto desde Arbor Grup
 
 Nombre: ${name}
 Email: ${email}
 Tipo de Proyecto: ${typeLabels[type] || type}
-Presupuesto: ${budgetLabels[budget] || budget}
 
 Mensaje:
 ${message}
 
 ---
-Este email fue enviado desde el formulario de contacto de Arbor.
+Este email fue enviado desde el formulario de contacto de Arbor Group.
 Puedes responder directamente a este email para contactar con ${name}.
             `.trim(),
         });
@@ -356,7 +326,7 @@ Puedes responder directamente a este email para contactar con ${name}.
         );
     } catch (error) {
         console.error("❌ Error al procesar el mensaje:", error);
-        
+
         // No exponer detalles del error al cliente
         return NextResponse.json(
             { error: "Error al enviar el mensaje. Por favor, intenta de nuevo." },

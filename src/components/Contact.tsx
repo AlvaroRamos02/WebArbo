@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { Button } from "./ui/Button";
+import { Send, Terminal } from "lucide-react";
 
 export function Contact() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        type: "web-corporativa",
-        budget: "menos-500",
+        type: "consulting",
         message: "",
-        privacy: false,
+        privacy: false
     });
 
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -21,22 +21,15 @@ export function Contact() {
         setStatus("loading");
         setErrorMessage("");
 
-        // Validación adicional en el frontend
+        // Frontend validation
         if (formData.name.trim().length < 2) {
             setStatus("error");
-            setErrorMessage("El nombre debe tener al menos 2 caracteres");
+            setErrorMessage("El nombre debe tener al menos 2 caracteres.");
             return;
         }
-
         if (formData.message.trim().length < 10) {
             setStatus("error");
-            setErrorMessage("El mensaje debe tener al menos 10 caracteres");
-            return;
-        }
-
-        if (!formData.privacy) {
-            setStatus("error");
-            setErrorMessage("Debes aceptar la política de privacidad");
+            setErrorMessage("Por favor, detalla un poco más tu consulta (mín. 10 caracteres).");
             return;
         }
 
@@ -47,199 +40,150 @@ export function Contact() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: formData.name.trim(),
-                    email: formData.email.trim(),
+                    name: formData.name,
+                    email: formData.email,
                     type: formData.type,
-                    budget: formData.budget,
-                    message: formData.message.trim(),
+                    message: formData.message
                 }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                // Manejar diferentes códigos de error
-                if (response.status === 429) {
-                    throw new Error("Demasiadas solicitudes. Por favor, espera un momento.");
-                }
                 throw new Error(data.error || "Error al enviar el mensaje");
             }
 
             setStatus("success");
-            // Limpiar formulario
             setFormData({
                 name: "",
                 email: "",
-                type: "web-corporativa",
-                budget: "menos-500",
+                type: "consulting",
                 message: "",
-                privacy: false,
+                privacy: false
             });
-
-            // Reset success message after 5 seconds
             setTimeout(() => setStatus("idle"), 5000);
         } catch (error) {
             setStatus("error");
-            setErrorMessage(error instanceof Error ? error.message : "Error desconocido");
+            setErrorMessage(error instanceof Error ? error.message : "Hubo un error al enviar el mensaje.");
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
-        const checked = (e.target as HTMLInputElement).checked;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     return (
-        <section id="contacto" className="py-16 md:py-24">
-            <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        ¿Hablamos?
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Cuéntame qué tienes en mente. Sin compromiso. Te responderé yo mismo en menos de 24h.
-                    </p>
-                </div>
+        <section id="contacto" className="py-24 bg-background relative overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
 
-                <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-                    {status === "success" && (
-                        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-                            ✓ ¡Mensaje enviado! Te responderé pronto.
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <div className="grid lg:grid-cols-2 gap-16">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-xs font-mono text-primary mb-6">
+                            <span className="animate-pulse">●</span> Contacto
                         </div>
-                    )}
+                        <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-6">
+                            Hablemos de código y negocio.
+                        </h2>
+                        <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-md">
+                            ¿Listo para escalar tu infraestructura o automatizar flujos de trabajo? No hacemos presentaciones de ventas, hacemos diagnósticos de ingeniería.
+                        </p>
 
-                    {status === "error" && (
-                        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                            ✗ {errorMessage}
-                        </div>
-                    )}
-
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <div className="space-y-2">
-                            <label htmlFor="name" className="text-sm font-medium text-gray-900">
-                                Nombre
-                            </label>
-                            <input
-                                id="name"
-                                name="name"
-                                type="text"
-                                required
-                                minLength={2}
-                                maxLength={100}
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                placeholder="Tu nombre"
-                                value={formData.name}
-                                onChange={handleChange}
-                                disabled={status === "loading"}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="text-sm font-medium text-gray-900">
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                required
-                                maxLength={254}
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                placeholder="tu@email.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                disabled={status === "loading"}
-                            />
+                        <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] max-w-sm">
+                            <div className="flex items-center gap-3 mb-4 text-foreground font-mono text-sm">
+                                <Terminal size={16} className="text-primary" />
+                                <span>Contacto Directo</span>
+                            </div>
+                            <p className="text-muted-foreground text-sm mb-2">arbor.group.contact@gmail.com</p>
+                            <p className="text-muted-foreground text-sm">Madrid, ES</p>
                         </div>
                     </div>
 
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {status === "success" && (
+                            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-500 text-sm font-mono">
+                                ✅ Mensaje recibido. Inicializando protocolo de respuesta...
+                            </div>
+                        )}
+                        {status === "error" && (
+                            <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-mono">
+                                ❌ {errorMessage}
+                            </div>
+                        )}
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label htmlFor="name" className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Nombre</label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary transition-colors text-lg"
+                                    placeholder="Nombre Apellido"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label htmlFor="email" className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Email</label>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    required
+                                    className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary transition-colors text-lg"
+                                    placeholder="nombre@empresa.com"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
                         <div className="space-y-2">
-                            <label htmlFor="type" className="text-sm font-medium text-gray-900">
-                                Tipo de proyecto
-                            </label>
+                            <label htmlFor="type" className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Tipo de Consulta</label>
                             <select
                                 id="type"
                                 name="type"
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-foreground focus:outline-none focus:border-primary transition-colors text-lg [&>option]:bg-background"
                                 value={formData.type}
                                 onChange={handleChange}
-                                disabled={status === "loading"}
                             >
-                                <option value="landing">Landing Page</option>
-                                <option value="web-corporativa">Web Corporativa</option>
-                                <option value="tienda">Tienda Online</option>
-                                <option value="otro">Otro</option>
+                                <option value="consulting">Consultoría Técnica</option>
+                                <option value="development">Desarrollo Web / App</option>
+                                <option value="automation">Automatización de Procesos</option>
+                                <option value="seo">SEO & Posicionamiento</option>
+                                <option value="other">Otro</option>
                             </select>
                         </div>
+
                         <div className="space-y-2">
-                            <label htmlFor="budget" className="text-sm font-medium text-gray-900">
-                                Presupuesto aproximado
-                            </label>
-                            <select
-                                id="budget"
-                                name="budget"
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                value={formData.budget}
+                            <label htmlFor="message" className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Detalles del Proyecto</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                required
+                                rows={4}
+                                className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary transition-colors text-lg resize-none"
+                                placeholder="Cuéntanos sobre tu stack tecnológico o necesidades..."
+                                value={formData.message}
                                 onChange={handleChange}
-                                disabled={status === "loading"}
-                            >
-                                <option value="menos-500">Menos de 500€</option>
-                                <option value="500-1000">500€ - 1000€</option>
-                                <option value="1000-2000">1000€ - 2000€</option>
-                                <option value="mas-2000">Más de 2000€</option>
-                            </select>
+                            />
                         </div>
-                    </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium text-gray-900">
-                            Mensaje
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            required
-                            minLength={10}
-                            maxLength={2000}
-                            rows={4}
-                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="Cuéntame un poco más sobre tu proyecto..."
-                            value={formData.message}
-                            onChange={handleChange}
-                            disabled={status === "loading"}
-                        />
-                    </div>
-
-                    <div className="flex items-start gap-2">
-                        <input
-                            id="privacy"
-                            name="privacy"
-                            type="checkbox"
-                            required
-                            className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                            checked={formData.privacy}
-                            onChange={handleChange}
-                            disabled={status === "loading"}
-                        />
-                        <label htmlFor="privacy" className="text-sm text-gray-500">
-                            He leído y acepto la <a href="#" className="text-primary hover:underline">política de privacidad</a>.
-                        </label>
-                    </div>
-
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        size="lg"
-                        disabled={status === "loading"}
-                    >
-                        {status === "loading" ? "Enviando..." : "Enviar consulta"}
-                    </Button>
-                </form>
+                        <Button
+                            type="submit"
+                            size="lg"
+                            className="w-full md:w-auto mt-4 gap-2"
+                            disabled={status === "loading" || status === "success"}
+                        >
+                            {status === "loading" ? "Procesando..." : status === "success" ? "Mensaje Enviado" : "Iniciar Conversación"}
+                            {status === "idle" && <Send size={16} />}
+                        </Button>
+                    </form>
+                </div>
             </div>
         </section>
     );

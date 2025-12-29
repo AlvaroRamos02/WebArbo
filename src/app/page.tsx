@@ -2,20 +2,22 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { Projects } from "@/components/Projects";
+import { Tech } from "@/components/Tech";
 import { Process } from "@/components/Process";
-import { Pricing } from "@/components/Pricing";
+import { Collaboration } from "@/components/Collaboration";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background">
       <Navbar />
       <Hero />
       <Services />
       <Projects />
-      <Process />
-      <Pricing />
+      {/* <Tech /> */}
+      {/* <Process /> */}
+      {/* <Collaboration /> */}
       <Contact />
       <Footer />
     </main>
