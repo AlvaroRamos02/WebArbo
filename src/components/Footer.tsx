@@ -15,7 +15,7 @@ export function Footer() {
                                 className="object-contain invert dark:invert-0"
                             />
                         </div>
-                        <span className="font-mono font-bold text-foreground">Arbor_Group</span>
+                        <span className="font-mono font-bold text-foreground">ArborGroup</span>
                     </div>
 
                     <div className="flex gap-8 text-sm font-medium">

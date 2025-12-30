@@ -28,7 +28,7 @@ export function Navbar() {
                         />
                     </div>
                     <span className="text-lg font-mono font-bold tracking-tight text-foreground">
-                        Arbor<span className="text-muted-foreground">_Group</span>
+                        ArborGroup
                     </span>
                 </Link>
 
