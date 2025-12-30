@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     shortcut: "/arbor-logo.svg",
     apple: "/arbor-logo.svg",
   },
+  verification: {
+    google: "yeGHOx6q18Lfl_RrqpQB8qP56xR4hQ4cEqvdx3vKoPc",
+  },
 };
 
 export default function RootLayout({
