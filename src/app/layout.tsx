@@ -15,9 +15,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arbor Grup | Digitalización y Desarrollo Web Senior",
+  title: "Arbor Group | Digitalización y desarrollo web",
   description:
     "Consultoría tecnológica, desarrollo web y automatización de procesos para empresas que buscan excelencia.",
+  icons: {
+    icon: "/arbor-logo.svg",
+    shortcut: "/arbor-logo.svg",
+    apple: "/arbor-logo.svg",
+  },
 };
 
 export default function RootLayout({
